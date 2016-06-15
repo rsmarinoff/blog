@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.user;
+package com.example.security;
 
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -36,13 +36,31 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         return repository.save(user);
     }
     
+    public User deleteUser(long id){
+        User user = repository.findOne(id);
+        if(user == null){
+            return new User();
+        }
+        repository.delete(user);
+        return user;
+    }
+    
+    public User updateUser(long id, User user){
+        User localUser = repository.findOne(id);
+        if(user == null){
+            return new User();
+        }
+        //repository.save(new User(id, user.getUsername(), user.getPassword(), (List<Role>) user.getAuthorities()));
+        return user;
+    }
+    
     public List<User> listAll(){
         return repository.findAll();
     }
     
     @PostConstruct
     public void addDefaultUsers(){
-        repository.save(new User("admin", "admin", "ROLE_ADMIN"));
+        repository.save(new User("admin", "admin", "ROLE_ADMIN", "ROLE_BLOGGER"));
         repository.save(new User("user", "user", "ROLE_USER"));
     }
     

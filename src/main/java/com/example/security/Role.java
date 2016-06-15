@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.user;
+package com.example.security;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,19 +17,27 @@ import org.springframework.security.core.GrantedAuthority;
 public class Role implements GrantedAuthority{
     
     @Id
-    private String Id;
+    private String id;
     
     protected Role(){
         
     }
     
-    public Role(String Id){
-        this.Id = Id;
+    public Role(String id){
+        this.id = id;
     }
     
     @Override
     public String getAuthority() {
-       return Id; 
+       return id; 
+    }
+    
+    public String getId(){
+        return id;
+    }
+    
+    public void setId(String id){
+        this.id = id;
     }
     
 }

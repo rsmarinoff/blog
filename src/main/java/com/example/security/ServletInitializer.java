@@ -1,4 +1,4 @@
-package com.example.user;
+package com.example.security;
 
 import com.example.BlogApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

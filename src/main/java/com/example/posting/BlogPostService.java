@@ -30,4 +30,22 @@ public class BlogPostService {
     public BlogPost readPostById(long id){
         return repository.findOne(id);
     }
+    
+    public BlogPost updatePost(long id, BlogPost post){
+        BlogPost blogPost = repository.findOne(id);
+        if(blogPost == null){
+            return new BlogPost();
+        }
+        repository.save(new BlogPost(id, post.getTitle(), post.getAuthor(), post.getContent()));
+        return post;
+    }
+    
+    public BlogPost deltePostById(long id){
+        BlogPost post = repository.findOne(id);
+        if(post == null){
+            return new BlogPost();
+        }
+        repository.delete(id);
+        return post;
+    }
 }

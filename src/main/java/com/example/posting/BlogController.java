@@ -45,11 +45,12 @@ public class BlogController {
     @RequestMapping(value = "/update", method=RequestMethod.PUT, consumes="application/json")
     public @ResponseBody BlogPost updatePost(@RequestParam(value="id", required=true) long id, 
                                              @RequestBody BlogPost post){
-        BlogPost blogPost = postService.readPostById(id);
-        if(blogPost == null){
-            return new BlogPost();
-        }
-        return postService.addPost(new BlogPost(id, post.getTitle(), post.getAuthor(), post.getContent()));
+        return postService.updatePost(id, post);
+    }
+    
+    @RequestMapping(value = "/delete", method=RequestMethod.DELETE, produces="application/json")
+    public @ResponseBody BlogPost deletePost(@RequestParam(value="id", required=true) long id){
+        return postService.deltePostById(id);
     }
     
 }
