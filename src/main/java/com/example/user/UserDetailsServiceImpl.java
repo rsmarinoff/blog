@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.app;
+package com.example.user;
 
+import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +34,10 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     
     public User addUser(User user){
         return repository.save(user);
+    }
+    
+    public List<User> listAll(){
+        return repository.findAll();
     }
     
     @PostConstruct

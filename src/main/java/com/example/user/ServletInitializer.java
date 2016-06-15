@@ -1,5 +1,6 @@
-package com.example.app;
+package com.example.user;
 
+import com.example.BlogApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 

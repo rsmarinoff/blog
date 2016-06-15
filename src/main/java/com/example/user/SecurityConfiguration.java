@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.app;
+package com.example.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -35,10 +35,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.userDetailsService(userDetailsService()).csrf().disable()
       .authorizeRequests()
-        .antMatchers(HttpMethod.POST, "/").authenticated()
-        .antMatchers(HttpMethod.PUT, "/").authenticated()
+        .antMatchers(HttpMethod.POST, "/posts/add").access("hasRole('ROLE_ADMIN')")
+        .antMatchers(HttpMethod.PUT, "/posts/update").access("hasRole('ROLE_ADMIN')")
         .antMatchers(HttpMethod.DELETE, "/").authenticated()
-        .antMatchers(HttpMethod.GET, "/").access("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+        .antMatchers(HttpMethod.GET, "/posts/get/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
         .anyRequest().permitAll()
         .and()
       .httpBasic().and()
