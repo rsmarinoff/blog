@@ -34,7 +34,7 @@ public class User implements UserDetails{
     private String username;
     private String password;
     
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private final List<Role> roles = new ArrayList<>();
     
     protected User(){
@@ -42,6 +42,15 @@ public class User implements UserDetails{
     }
     
     public User(String username, String password, String... userRoles){
+        this.username = username;
+        this.password = password;
+        for(String role : userRoles){
+            roles.add(new Role(role));
+        }
+    }
+    
+    public User(long id, String username, String password, String... userRoles){
+        this.id = id;
         this.username = username;
         this.password = password;
         for(String role : userRoles){

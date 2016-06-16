@@ -5,8 +5,6 @@
  */
 package com.example.security;
 
-import java.util.List;
-
 /**
  *
  * @author dilyan
@@ -15,13 +13,13 @@ public class UserDTO {
     
     private String username;
     private String password;
-    private String roles;
+    private String[] roles;
     
     protected UserDTO(){
         
     }
     
-    public UserDTO(String username, String password, String roles){
+    public UserDTO(String username, String password, String... roles){
         this.username = username;
         this.password = password;
         this.roles = roles;
@@ -35,7 +33,7 @@ public class UserDTO {
     }
 
     /**
-     * @param user the user to set
+     * @param username the username to set
      */
     public void setUsername(String username) {
         this.username = username;
@@ -58,14 +56,14 @@ public class UserDTO {
     /**
      * @return the roles
      */
-    public String getRoles() {
+    public String[] getRoles() {
         return roles;
     }
 
     /**
      * @param roles the roles to set
      */
-    public void setRoles(String roles) {
+    public void setRoles(String[] roles) {
         this.roles = roles;
     }
     

@@ -33,6 +33,9 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     }
     
     public User addUser(User user){
+        if(repository.findOneByUsername(user.getUsername()) != null){
+            return new User();
+        }
         return repository.save(user);
     }
     
@@ -45,17 +48,33 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         return user;
     }
     
-    public User updateUser(long id, User user){
-        User localUser = repository.findOne(id);
-        if(user == null){
+    public User updateUser(User user){
+        User localUser = repository.findOne(user.getId());
+        if(localUser == null){
             return new User();
         }
-        //repository.save(new User(id, user.getUsername(), user.getPassword(), (List<Role>) user.getAuthorities()));
-        return user;
+        return repository.save(user);
+    }
+    
+    public User getUserById(long id){
+        User localUser = repository.findOne(id);
+        if(localUser == null){
+            return new User();
+        }
+        return repository.findOne(id);
     }
     
     public List<User> listAll(){
         return repository.findAll();
+    }
+    
+    public User deleteUserById(long id){
+        User localUser = repository.findOne(id);
+        if(localUser == null){
+            return new User();
+        }
+        repository.delete(id);
+        return localUser;
     }
     
     @PostConstruct
