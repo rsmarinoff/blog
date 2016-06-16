@@ -34,7 +34,7 @@ public class User implements UserDetails{
     private String username;
     private String password;
     
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private final List<Role> roles = new ArrayList<>();
     
     protected User(){

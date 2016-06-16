@@ -5,8 +5,13 @@
  */
 package com.example.posting;
 
+import com.example.security.User;
+import com.example.security.UserAuthentication;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,34 +26,49 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/")
 public class BlogController {
     
     @Autowired
     private BlogPostService postService;
     
-    @RequestMapping(value = "/get/all", method=RequestMethod.GET, produces="application/json")
+    @Autowired
+    UserAuthentication authentication;
+    
+    @RequestMapping(value = "/posts", method=RequestMethod.GET, produces="application/json")
     public @ResponseBody List<BlogPost> getAllBlogPosts(){
         return postService.readAll();
     }
     
-    @RequestMapping(value = "/get/{id}", method=RequestMethod.GET, produces="application/json")
+    @RequestMapping(value = "/post/{id}", method=RequestMethod.GET, produces="application/json")
     public @ResponseBody BlogPost getPostById(@PathVariable(value="id") long id){
         return postService.readPostById(id);
     }
     
-    @RequestMapping(value = "/add", method=RequestMethod.POST, consumes="application/json")
+    @RequestMapping(value = "/post", method=RequestMethod.POST, consumes="application/json")
     public @ResponseBody BlogPost addPost(@RequestBody BlogPost post){
-        return postService.addPost(post);
+        return postService.addPost(post, (User) authentication.getPrincipal());
     }
     
-    @RequestMapping(value = "/update", method=RequestMethod.PUT, consumes="application/json")
+    @RequestMapping(value = "/comment", method=RequestMethod.POST, consumes="application/json")
+    public @ResponseBody BlogPost addComment(@RequestParam(value="id", required=true) long id,
+                                             @RequestBody BlogPostComment comment){
+        return postService.addCommentToPostById(id, comment, (User) authentication.getPrincipal());
+    }
+    
+    @RequestMapping(value = "/comment", method=RequestMethod.DELETE, produces="application/json")
+    public @ResponseBody BlogPost deleteComment(@RequestParam(value="postid", required=true) long postId,
+                                                @RequestParam(value="commentid", required=true) long commentId){
+        return postService.deleteCommentFromPostById(postId, commentId, (User) authentication.getPrincipal());
+    }
+    
+    @RequestMapping(value = "/post", method=RequestMethod.PUT, consumes="application/json")
     public @ResponseBody BlogPost updatePost(@RequestParam(value="id", required=true) long id, 
                                              @RequestBody BlogPost post){
-        return postService.updatePost(id, post);
+        return postService.updatePost(id, post, (User) authentication.getPrincipal());
     }
     
-    @RequestMapping(value = "/delete", method=RequestMethod.DELETE, produces="application/json")
+    @RequestMapping(value = "/post", method=RequestMethod.DELETE, produces="application/json")
     public @ResponseBody BlogPost deletePost(@RequestParam(value="id", required=true) long id){
         return postService.deltePostById(id);
     }

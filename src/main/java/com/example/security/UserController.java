@@ -20,34 +20,34 @@ import org.springframework.web.bind.annotation.RestController;
  * @author dilyan
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/")
 public class UserController {
     
     @Autowired
     UserDetailsServiceImpl userDetailsService;
     
-    @RequestMapping(value="/add", method=RequestMethod.POST, consumes="application/json")
+    @RequestMapping(value="/user", method=RequestMethod.POST, consumes="application/json")
     public @ResponseBody User addUser(@RequestBody UserDTO user){
         return userDetailsService.addUser(new User(user.getUsername(), user.getPassword(), user.getRoles()));
     }
     
-    @RequestMapping(value="/update", method=RequestMethod.PUT, consumes="application/json")
+    @RequestMapping(value="/user", method=RequestMethod.PUT, consumes="application/json")
     public @ResponseBody User updateUser(@RequestParam long id, @RequestBody UserDTO user){
         return userDetailsService.updateUser(new User(id, user.getUsername(), user.getPassword(), user.getRoles()));
     }
     
-    @RequestMapping(value="/get/all", method=RequestMethod.GET, produces="application/json")
+    @RequestMapping(value="/users", method=RequestMethod.GET, produces="application/json")
     public @ResponseBody List<User> listAllUsers(){
         return userDetailsService.listAll();
     }
     
-    @RequestMapping(value="/get/{id}", method=RequestMethod.GET, produces="application/json")
-    public @ResponseBody User getUserById(@PathVariable("id") long id){
+    @RequestMapping(value="/user/{id}", method=RequestMethod.GET, produces="application/json")
+    public @ResponseBody User getUserById(@PathVariable(value="id") long id){
         return userDetailsService.getUserById(id);
     }
     
-    @RequestMapping(value="/delete", method=RequestMethod.DELETE, produces="application/json")
-    public @ResponseBody User deleteUserById(@RequestParam("id") long id){
+    @RequestMapping(value="/user", method=RequestMethod.DELETE, produces="application/json")
+    public @ResponseBody User deleteUserById(@RequestParam(value="id", required=true) long id){
         return userDetailsService.deleteUserById(id);
     }
     

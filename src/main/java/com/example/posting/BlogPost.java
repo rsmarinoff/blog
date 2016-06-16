@@ -5,11 +5,23 @@
  */
 package com.example.posting;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.sql.Date;
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 /**
  *
@@ -24,6 +36,18 @@ public class BlogPost implements Serializable {
     private String title;
     private String author;
     private String content;
+    
+    @Column(name = "created_on")
+    private Date createdOn;
+    @Column(name = "updated_on")
+    private Date updatedOn;
+    @Column(name = "created_at")
+    private Time createdAt;
+    @Column(name = "updated_at")
+    private Time updatedAt;
+    
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private final List<BlogPostComment> comments = new ArrayList<>();
     
     protected BlogPost(){
         
@@ -84,6 +108,54 @@ public class BlogPost implements Serializable {
      */
     public void setContent(String content) {
         this.content = content;
+    }
+    
+    public void addComment(BlogPostComment commentToAdd){
+        comments.add(commentToAdd);
+    }
+    
+    public List<BlogPostComment> getComments(){
+        return comments;
+    }
+
+    /**
+     * @return the createdAt
+     */
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    /**
+     * @return the updatedAt
+     */
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+    
+    @PrePersist
+    void createdOn() {
+      this.createdOn = this.updatedOn = new Date(Calendar.getInstance().getTimeInMillis());
+      this.createdAt = this.updatedAt = new Time(Calendar.getInstance().getTimeInMillis());
+    }
+
+    @PreUpdate
+    void updatedAt() {
+      this.updatedOn = new Date(Calendar.getInstance().getTimeInMillis());
+      this.updatedAt = new Time(Calendar.getInstance().getTimeInMillis());
+    }
+
+    /**
+     * @return the createdAt
+     */
+    public Time getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * @return the updatedAt
+     */
+    public Time getUpdatedAt() {
+        return updatedAt;
     }
     
 }
