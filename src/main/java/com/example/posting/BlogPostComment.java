@@ -32,6 +32,12 @@ public class BlogPostComment implements Serializable {
         this.author = author;
         this.content = content;
     }
+    
+    public BlogPostComment(long id, String author, String content){
+        this.id = id;
+        this.author = author;
+        this.content = content;
+    }
 
     public Long getId() {
         return id;

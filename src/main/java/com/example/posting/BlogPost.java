@@ -158,4 +158,28 @@ public class BlogPost implements Serializable {
         return updatedAt;
     }
     
+    public void deleteCommentById(long id){
+        for(BlogPostComment comment : comments){
+            if(comment.getId() == id){
+                comments.remove(comment);
+                return;
+            }
+        }
+    }
+    
+    public void updateCommentById(long id, BlogPostComment newComment){
+            deleteCommentById(id);
+            newComment.setId(id);
+            comments.add(newComment);
+    }
+    
+    public BlogPostComment getCommentById(long id){
+        for(BlogPostComment comment : comments){
+            if(comment.getId() == id){
+                return comment;
+            }
+        }
+        return new BlogPostComment(0, "", "");
+    }
+    
 }

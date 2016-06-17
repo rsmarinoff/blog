@@ -6,6 +6,7 @@
 package com.example.posting;
 
 import com.example.security.User;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class BlogPostService {
         if(blogPost == null){
             return new BlogPost();
         }
-        if(!blogPost.getAuthor().equals(user.getUsername())){
+        if(!belongsToUser(post, user)){
             return new BlogPost();
         }
         blogPost.setTitle(post.getTitle());
@@ -46,9 +47,12 @@ public class BlogPostService {
         return repository.save(blogPost);       
     }
     
-    public BlogPost deltePostById(long id){
+    public BlogPost deltePostById(long id, User user){
         BlogPost post = repository.findOne(id);
         if(post == null){
+            return new BlogPost();
+        }
+        if(!belongsToUser(post, user)){
             return new BlogPost();
         }
         repository.delete(id);
@@ -70,15 +74,61 @@ public class BlogPostService {
         if(post == null){
             return new BlogPost();
         }
+        if(post.getComments().isEmpty()){
+            return new BlogPost();
+        }
+        if(belongsToUser(post.getCommentById(commentId), user)){
+            post.deleteCommentById(commentId);
+            return repository.save(post);
+        }
+        if(belongsToUser(post, user)){
+            post.deleteCommentById(commentId);
+            return repository.save(post);
+        }
+        return new BlogPost();
+    }
+    
+    public BlogPost updateCommentForPostById(long postId, long commentId, BlogPostComment newComment, User user){
+        BlogPost post = repository.findOne(postId);
+        if(post == null){
+            return new BlogPost();
+        }
         List<BlogPostComment> localComments = post.getComments();
         if(localComments.isEmpty()){
             return new BlogPost();
         }
-        for(BlogPostComment comment : localComments){
-            if(comment.getId() == commentId){
-                localComments.remove(comment);
-            }
+        if(!belongsToUser(post.getCommentById(commentId), user)){
+            return new BlogPost();
         }
+        newComment.setAuthor(user.getUsername());
+        post.updateCommentById(postId, newComment);
         return repository.save(post);
+    }
+    
+    public BlogPostComment getCommentById(long postId, long commentId){
+        BlogPost post = repository.findOne(postId);
+        if(post == null){
+            return new BlogPostComment();
+        }
+        if(post.getComments().isEmpty()){
+            return new BlogPostComment();
+        }
+        return post.getCommentById(commentId);
+    }
+    
+    public List<BlogPostComment> getCommentsForPost(long postId){
+        BlogPost post = repository.findOne(postId);
+        if(post == null){
+            return new ArrayList<>();
+        }
+        return post.getComments();
+    }
+    
+    private boolean belongsToUser(BlogPost post, User user){
+        return post.getAuthor().equals(user.getUsername());
+    }
+    
+    private boolean belongsToUser(BlogPostComment comment, User user){
+        return comment.getAuthor().equals(user.getUsername());
     }
 }
