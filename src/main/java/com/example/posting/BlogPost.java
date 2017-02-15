@@ -54,7 +54,7 @@ public class BlogPost implements Serializable {
 
     /**
      *
-     * Something, something...
+     * Something, something... something else...
      *
      */
     public BlogPost(long id, String title, String author, String content) {
