@@ -5,11 +5,10 @@
  */
 package com.example.posting;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -36,7 +35,7 @@ public class BlogPost implements Serializable {
     private String title;
     private String author;
     private String content;
-    
+
     @Column(name = "created_on")
     private Date createdOn;
     @Column(name = "updated_on")
@@ -45,21 +44,26 @@ public class BlogPost implements Serializable {
     private Time createdAt;
     @Column(name = "updated_at")
     private Time updatedAt;
-    
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private final List<BlogPostComment> comments = new ArrayList<>();
-    
-    protected BlogPost(){
-        
+
+    protected BlogPost() {
+
     }
-    
-    public BlogPost(long id, String title, String author, String content){
+
+    /**
+     *
+     * Something, something... something else...
+     *
+     */
+    public BlogPost(long id, String title, String author, String content) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.content = content;
     }
-    
+
     public long getId() {
         return id;
     }
@@ -109,12 +113,12 @@ public class BlogPost implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
-    
-    public void addComment(BlogPostComment commentToAdd){
+
+    public void addComment(BlogPostComment commentToAdd) {
         comments.add(commentToAdd);
     }
-    
-    public List<BlogPostComment> getComments(){
+
+    public List<BlogPostComment> getComments() {
         return comments;
     }
 
@@ -131,17 +135,17 @@ public class BlogPost implements Serializable {
     public Date getUpdatedOn() {
         return updatedOn;
     }
-    
+
     @PrePersist
     void createdOn() {
-      this.createdOn = this.updatedOn = new Date(Calendar.getInstance().getTimeInMillis());
-      this.createdAt = this.updatedAt = new Time(Calendar.getInstance().getTimeInMillis());
+        this.createdOn = this.updatedOn = new Date(Calendar.getInstance().getTimeInMillis());
+        this.createdAt = this.updatedAt = new Time(Calendar.getInstance().getTimeInMillis());
     }
 
     @PreUpdate
     void updatedAt() {
-      this.updatedOn = new Date(Calendar.getInstance().getTimeInMillis());
-      this.updatedAt = new Time(Calendar.getInstance().getTimeInMillis());
+        this.updatedOn = new Date(Calendar.getInstance().getTimeInMillis());
+        this.updatedAt = new Time(Calendar.getInstance().getTimeInMillis());
     }
 
     /**
@@ -157,29 +161,29 @@ public class BlogPost implements Serializable {
     public Time getUpdatedAt() {
         return updatedAt;
     }
-    
-    public void deleteCommentById(long id){
-        for(BlogPostComment comment : comments){
-            if(comment.getId() == id){
+
+    public void deleteCommentById(long id) {
+        for (BlogPostComment comment : comments) {
+            if (comment.getId() == id) {
                 comments.remove(comment);
                 return;
             }
         }
     }
-    
-    public void updateCommentById(long id, BlogPostComment newComment){
-            deleteCommentById(id);
-            newComment.setId(id);
-            comments.add(newComment);
+
+    public void updateCommentById(long id, BlogPostComment newComment) {
+        deleteCommentById(id);
+        newComment.setId(id);
+        comments.add(newComment);
     }
-    
-    public BlogPostComment getCommentById(long id){
-        for(BlogPostComment comment : comments){
-            if(comment.getId() == id){
+
+    public BlogPostComment getCommentById(long id) {
+        for (BlogPostComment comment : comments) {
+            if (comment.getId() == id) {
                 return comment;
             }
         }
         return new BlogPostComment(0, "", "");
     }
-    
+
 }
